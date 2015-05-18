@@ -3,34 +3,50 @@
  *  @copyright  Copyright (C) 2015 by Yieme
  *  @module     fsurl
  */
- (function() {
-  'use strict';
-  var FsurlError = require('make-error')('FsurlError')
+'use strict';
 
-  /** Fsurl
-   *  @class
-   *  @param      {object} options - The options
-   *  @return     {object}
-   */
-  function fsurlClass(options) {
-    /*jshint validthis: true */
-    var self = this
-    options = options || {}
-    self.value = options
-    return self
+var fs = require('fs')
+var sa = require('superagent')
+var requestSync = require('sync-request')
+
+
+function isUrl(path) {
+  var head = path.substr(0,7).toLowerCase()
+  console.log('head:', head)
+  return (head == 'https:/' || head == 'http://' || path.substr(0,2) == '//')
+}
+
+
+
+function fsurl(path, callback) {
+  if (isUrl(path)) {
+    sa.get(path).end(function fsurlReadUrl(err, res) {
+      if (err) return callback(err)
+      var data = res.getBody()
+      return JSON.parse(data)
+    })
+  } else {
+    fs.readFile(path, 'utf8', function fsurlReadFile(err, data) {
+      if (err) return callback(err)
+      return JSON.parse(data)
+    })
   }
+}
 
 
 
-  /** Fsurl
-   *  @constructor
-   *  @param      {object} options - The options
-   *  @return     {object}
-   */
-  function fsurl(options) {
-    return new fsurlClass(options).value
+function fsurlSync(path) {
+  var data
+  if (isUrl(path)) {
+    var res = requestSync('GET', path)
+    data = res.getBody()
+  } else {
+    data = fs.readFileSync(path, 'utf8')
   }
+  return JSON.parse(data)
+}
 
 
-  module.exports = fsurl
-})();
+
+module.exports      = fsurl
+module.exports.sync = fsurlSync

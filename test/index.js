@@ -1,18 +1,18 @@
 var expect = require('chai').expect,
-    fsurl = require('..');
+    fsurl
+
 describe('fsurl', function() {
   it('should load', function(done) {
-    fsurl()
-    done();
-  });
+    fsurl = require('..')
+    done()
+  })
 
-  var expected = ["hello", "world"]
-  var expectedString = JSON.stringify(expected)
+
+  var expectedString = 'fsurl'
   it('should eaual ' + expectedString, function(done) {
-    var test = fsurl(expected)
-    var json = JSON.stringify(test)
-    expect(json).to.equal(expectedString);
-    done();
-  });
+    var data = fsurl.sync('./package.json')
+    expect(data.name).to.equal(expectedString)
+    done()
+  })
 
-});
+})
