@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "convar": "~1.1.6",
-    "get-stdin": "~4.0.1",
     "superagent": "^1.2.0",
     "sync-request": "^2.0.1"
   },

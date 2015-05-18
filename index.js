@@ -12,7 +12,6 @@ var requestSync = require('sync-request')
 
 function isUrl(path) {
   var head = path.substr(0,7).toLowerCase()
-  console.log('head:', head)
   return (head == 'https:/' || head == 'http://' || path.substr(0,2) == '//')
 }
 
